@@ -1,0 +1,48 @@
+#Create a database in MySQL named- "hotel_management_system", using the syntax below-
+#Then, create 2 tables in the selected database, namely-"admin" and "customer", using the Description of both the tables given below-
+
+create database hotel_management_system;
+
+TABLE: admin
++--------------------+----------+------+-----+---------+-------+
+| Field              | Type     | Null | Key | Default | Extra |
++--------------------+----------+------+-----+---------+-------+
+| Name               | char(25) | YES  |     | NULL    |       |
+| Room_Type          | char(25) | YES  |     | NULL    |       |
+| Check_In_Date      | char(10) | YES  |     | NULL    |       |
+| Check_Out_Date     | char(10) | YES  |     | NULL    |       |
+| Reservation_Number | char(10) | YES  |     | NULL    |       |
+| Phone_Number       | char(10) | YES  |     | NULL    |       |
+| Email              | char(35) | YES  |     | NULL    |       |
+| Price              | char(6)  | YES  |     | NULL    |       |
++--------------------+----------+------+-----+---------+-------+
+
+TABLE: customer
++---------------------+-----------+------+-----+---------+-------+
+| Field               | Type      | Null | Key | Default | Extra |
++---------------------+-----------+------+-----+---------+-------+
+| Sr_No               | char(5)   | YES  |     | NULL    |       |
+| Room_Type           | char(55)  | YES  |     | NULL    |       |
+| Room_Amenities      | char(255) | YES  |     | NULL    |       |
+| Room_Services       | char(255) | YES  |     | NULL    |       |
+| Additional_Services | char(255) | YES  |     | NULL    |       |
+| Price               | char(15)  | YES  |     | NULL    |       |
++---------------------+-----------+------+-----+---------+-------+
+
+AFTER CREATING THE DATABASE AND THE TWO TABLES IN MySQL, YOU CAN NOW COPY-PASTE THE PYTHON CODE IN VSCODE.
+NOTE---> PLEASE DON'T FORGET TO DOWNLOAD THE IMPORTANT LIBRARIES IN YOUR SYSTEM, TO BE ABLE TO RUN THIS PROJECT.
+         THESE ARE GIVEN BELOW-
+         kivy, re, mysql.connector, tabulate, random, validate_email
+
+THESE LIBRARIES CAN BE DOWNLOADED IN YOUR SYSTEM IN THE 'COMMAND PROMPT'. JUST TYPE THE GIVEN LINES OF CODE BELOW-
+
+pip install kivy;
+pip install re;
+pip install mysql.connector;
+pip install tabulate;
+pip install random;
+pip install validate_email;
+
+TO CHECK WHETHER THE ABOVE LIBRARIES ARE NOW INSTALLED IN YOUR DEVICE, YOU CAN RUN THE GIVEN LINE OF CODE BELOW IN THE "COMMAND PROMPT", AND CHECK WHETHER THE ABOVE GIVEN NAMES OF LIBRARIES ARE PRESENT IN THE LIST-
+
+pip list;
