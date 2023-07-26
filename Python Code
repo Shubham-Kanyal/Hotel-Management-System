@@ -1,0 +1,384 @@
+import kivy
+import re
+import mysql.connector as x
+from tabulate import *
+from random import *
+from validate_email import *
+
+mycon = x.connect(host='localhost', user='root', passwd='12345',
+                  database='hotel_management_system', charset='utf-8')
+cur = mycon.cursor()
+# ___________________________________________________________________________________________________________________________________________
+# _________________________________________________________G U E S T--L O G I N--S Y S T E M_________________________________________________
+
+
+def Guest_Login_System():
+    def Guest_Login():
+        global name
+        name = input('Enter Name: ')
+        phone = input('Enter Phone Number: ')
+        email = input('Enter E-Mail Address: ')
+        is_valid = validate_email(email)
+        if is_valid and len(str(phone)) == 10:
+            print('\nLOGIN SUCCESSFUL!')
+            print('Hello', name)
+            print('\n\t\t\t\t\t\t\t\tWelcome To')
+            print('\n\t\t\t\t\t\t\tTHE CRYSTAL CASTLE HOTEL.')
+
+        for char in email:
+            if not is_valid and len(str(phone)) == 10:
+                print(
+                    '\nINVALID E-MAIL ADDRESS! PLEASE ENTER A VALID E-MAIL ADDRESS TO CONTINUE.')
+                break
+
+            elif is_valid and len(str(phone)) != 10:
+                print(
+                    '\nINVALID PHONE NUMBER! PLEASE ENTER A VALID 10-DIGIT PHONE NUMBER TO CONTINUE.')
+                break
+            elif not is_valid and len(str(phone)) != 10:
+                print('\nERROR 404! VALID DETAILS NOT FOUND.')
+                print(
+                    'PLEASE ENTER VALID E-MAIL ADDRESS & PHONE NUMBER TO CONTINUE.')
+                break
+
+    def Guest_Login_Window():
+        print('-'*75, 'MENU', '-'*73)
+        print('1. LogIn')
+        print('2. Display Room Details')
+        print('3. Book A Room')
+        print('4. Cancel Booking')
+        print('5. Return To Menu')
+        print('\n')
+        print('-'*154)
+
+    def Search_rooms():
+        mycon = x.connect(host='localhost', user='root', passwd='12345',
+                          database='hotel_management_system', charset='utf-8')
+        cur = mycon.cursor()
+        cur.execute('select * from customer')
+        data = cur.fetchall()
+        head = ['Sr No', 'Room Type', 'Room Amenities',
+                'Room Services', 'Additional Services', 'Price']
+        print(tabulate(data, headers=head, tablefmt='grid'))
+
+    def Book_Room():
+        import random
+        import mysql.connector as x
+
+        mycon = x.connect(host='localhost', user='root',
+                          passwd='12345', database='hotel_management_system')
+        cur = mycon.cursor()
+        cust_name = input('Enter Your Name: ')
+        cust_ph_no = str(input('Enter Your Phone Number: '))
+        cust_email = str(input('Enter Your E-Mail Address: '))
+        check_in_date = input(
+            'Please Enter A Suitable Room Check-In Date To Your Desired Hotel Room[DD/MM/YYYY]: ')
+        check_out_date = input(
+            'Please Enter A Suitable Room Check-Out Date From Your Hotel Room[DD/MM/YYYY]: ')
+
+        cur = mycon.cursor()
+        cur.execute('select * from customer')
+        data = cur.fetchall()
+        head = ['Sr No', 'Room Type', 'Room Amenities',
+                'Room Services', 'Additional Services', 'Price']
+        print(tabulate(data, headers=head, tablefmt='grid'))
+        print('\n')
+        print('1. Double')
+        print('2. Deluxe')
+        print('3. Studio')
+        print('4. Suite')
+        print('\n')
+        room_choice = input('Please Select Your Hotel Room Type[1-4]: ')
+        if room_choice == '1':
+            a = random.randint(300, 600)
+            price = str('$' + str(a))
+            room_type = 'Double'
+            confirmation = input(
+                'Enter \'y\' To Confirm The Booking Of Double Hotel Room On {}: '.format(check_in_date))
+            char = 'QWERTYUIOPASDFGHJKLZXCVBNM1234567890'
+            random_reservation_number = "".join(random.sample(char, 10))
+            for i in range(len(str(10))):
+                print()
+                break
+            if confirmation in 'yY':
+                print('Dear Guest, ')
+                print(
+                    '\n\nThank-You for choosing to stay at The Crystal Castle Hotel. We are pleased to confirm your booking of a Double Room for',
+                    check_in_date, 'To', check_out_date, '. Your Reservation Number Is ', random_reservation_number, '.')
+                print('''\n\nYour room has been carefully prepared to ensure your comfort and satisfaction during your stay with us. It features amenities such as Free Wifi, 24/7 Room Services, Access to Gym, Spa, Pool, etc..''')
+                print('''\n\nIf you have any special requests or requirements, feel free to contact us. Our staff is always available to assist you in any way possible to make your stay an enjoyable one.''')
+                print('''\n\nWe look forward to welcoming you to The Crystal Castle Hotel and hope you have a pleasant stay with us.''')
+                print('\n\nBest Regards, \nThe Crystal Castle Hotel')
+
+                mycon = x.connect(host='localhost', user='root', passwd='12345',
+                                  database='hotel_management_system', charset='utf-8')
+                cur = mycon.cursor()
+                sql = "INSERT INTO admin(Name, Room_Type, Check_In_Date, Check_Out_Date, Reservation_Number, Phone_Number, Email, Price) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
+                val = (cust_name, room_type, check_in_date, check_out_date,
+                       random_reservation_number, cust_ph_no, cust_email, price)
+                cur.execute(sql, val)
+                mycon.commit()
+
+            else:
+                if confirmation not in 'yY':
+                    print('Dear Guest, ')
+                    print('''\n\nWe regret to inform you that we were unable to confirm your reservation for a Double Room at The Crystal Castle Hotel. As per our records, we did not receive confirmation from you regarding your booking request.''')
+                    print('''\n\nIf you still require accomodations during the requested dates, we should be happy to assist you in finding alternative options. Please feel free to contact our reservations team for assistance in making new arrangements.''')
+                    print('''\n\nWe apologize for any inconvenience this may cause and hope that you will consider staying with us on a future visit to The Crystal Castle Hotel. If you have any questions/concerns, feel free to contact us or leave a mail at "thecrystalcastlehotel@gmail.com" ''')
+
+        if room_choice == '2':
+            a = random.randint(400, 800)
+            price = str('$' + str(a))
+            room_type = 'Deluxe'
+            confirmation = input(
+                'Enter \'y\' To Confirm The Booking Of Deluxe Hotel Room On {}: '.format(check_in_date))
+            char = 'QWERTYUIOPASDFGHJKLZXCVBNM1234567890'
+            random_reservation_number = "".join(random.sample(char, 10))
+            for i in range(len(str(10))):
+                print()
+                break
+            if confirmation in 'yY':
+                print('Dear Guest, ')
+                print(
+                    '\n\nThank-You for choosing to stay at The Crystal Castle Hotel. We are pleased to confirm your booking of a Deluxe Room for',
+                    check_in_date, 'To', check_out_date, '. Your Reservation Number Is ', random_reservation_number, '.')
+                print('''\n\nYour room has been carefully prepared to ensure your comfort and satisfaction during your stay with us. It features amenities such as Free Wifi, MiniBar, 24/7 Room Services, In-Room Dining, Turndown Services, Access to Gym, Spa, Pool, etc..''')
+                print('''\n\nIf you have any special requests or requirements, feel free to contact us. Our staff is always available to assist you in any way possible to make your stay an enjoyable one.''')
+                print('''\n\nWe look forward to welcoming you to The Crystal Castle Hotel and hope you have a pleasant stay with us.''')
+                print('\n\nBest Regards, \nThe Crystal Castle Hotel')
+
+                mycon = x.connect(host='localhost', user='root', passwd='12345',
+                                  database='hotel_management_system', charset='utf-8')
+                cur = mycon.cursor()
+                sql = "INSERT INTO admin(Name, Room_Type, Check_In_Date, Check_Out_Date, Reservation_Number, Phone_Number, Email, Price) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
+                val = (cust_name, room_type, check_in_date, check_out_date,
+                       random_reservation_number, cust_ph_no, cust_email, price)
+                cur.execute(sql, val)
+                mycon.commit()
+
+            else:
+                if confirmation not in 'yY':
+                    print('Dear Guest, ')
+                    print('''\n\nWe regret to inform you that we were unable to confirm your reservation for a Deluxe Room at The Crystal Castle Hotel. As per our records, we did not receive confirmation from you regarding your booking request.''')
+                    print('''\n\nIf you still require accomodations during the requested dates, we should be happy to assist you in finding alternative options. Please feel free to contact our reservations team for assistance in making new arrangements.''')
+                    print('''\n\nWe apologize for any inconvenience this may cause and hope that you will consider staying with us on a future visit to The Crystal Castle Hotel. If you have any questions/concerns, feel free to contact us or leave a mail at "thecrystalcastlehotel@gmail.com" ''')
+
+        if room_choice == '3':
+            a = random.randint(500, 1000)
+            price = str('$' + str(a))
+            room_type = 'Studio'
+            confirmation = input(
+                'Enter \'y\' To Confirm The Booking Of Studio Hotel Room On {}: '.format(check_in_date))
+            char = 'QWERTYUIOPASDFGHJKLZXCVBNM1234567890'
+            random_reservation_number = "".join(random.sample(char, 10))
+            for i in range(len(str(10))):
+                print()
+                break
+            if confirmation in 'yY':
+                print('Dear Guest, ')
+                print(
+                    '\n\nThank-You for choosing to stay at The Crystal Castle Hotel. We are pleased to confirm your booking of a Studio Room for',
+                    check_in_date, 'To', check_out_date, '. Your Reservation Number Is ', random_reservation_number, '.')
+                print('''\n\nYour room has been carefully prepared to ensure your comfort and satisfaction during your stay with us. It features amenities such as Refrigerator, 24/7 Room Services, In-Room Dining, Turndown Services, Access to Gym, Spa, Pool, Conceirge Services, etc..''')
+                print('''\n\nIf you have any special requests or requirements, feel free to contact us. Our staff is always available to assist you in any way possible to make your stay an enjoyable one.''')
+                print('''\n\nWe look forward to welcoming you to The Crystal Castle Hotel and hope you have a pleasant stay with us.''')
+                print('\n\nBest Regards, \nThe Crystal Castle Hotel')
+
+                mycon = x.connect(host='localhost', user='root', passwd='12345',
+                                  database='hotel_management_system', charset='utf-8')
+                cur = mycon.cursor()
+                sql = "INSERT INTO admin(Name, Room_Type, Check_In_Date, Check_Out_Date, Reservation_Number, Phone_Number, Email, Price) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
+                val = (cust_name, room_type, check_in_date, check_out_date,
+                       random_reservation_number, cust_ph_no, cust_email, price)
+                cur.execute(sql, val)
+                mycon.commit()
+
+            else:
+                if confirmation not in 'yY':
+                    print('Dear Guest, ')
+                    print('''\n\nWe regret to inform you that we were unable to confirm your reservation for a Deluxe Room at The Crystal Castle Hotel. As per our records, we did not receive confirmation from you regarding your booking request.''')
+                    print('''\n\nIf you still require accomodations during the requested dates, we should be happy to assist you in finding alternative options. Please feel free to contact our reservations team for assistance in making new arrangements.''')
+                    print('''\n\nWe apologize for any inconvenience this may cause and hope that you will consider staying with us on a future visit to The Crystal Castle Hotel. If you have any questions/concerns, feel free to contact us or leave a mail at "thecrystalcastlehotel@gmail.com" ''')
+
+        if room_choice == '4':
+            a = random.randint(700, 1500)
+            price = str('$' + str(a))
+            room_type = 'Suite'
+            confirmation = input(
+                'Enter \'y\' To Confirm The Booking Of Suite Hotel Room On {}: '.format(check_in_date))
+            char = 'QWERTYUIOPASDFGHJKLZXCVBNM1234567890'
+            random_reservation_number = "".join(random.sample(char, 10))
+            for i in range(len(str(10))):
+                print()
+                break
+            if confirmation in 'yY':
+                print('Dear Guest, ')
+                print(
+                    '\n\nThank-You for choosing to stay at The Crystal Castle Hotel. We are pleased to confirm your booking of a Suite Room for',
+                    check_in_date, 'To', check_out_date, '. Your Reservation Number Is ', random_reservation_number, '.')
+                print('''\n\nYour room has been carefully prepared to ensure your comfort and satisfaction during your stay with us. It features amenities such as Free Wifi, Refrigerator, Daily Housekeeping, In-Room Dining, Turndown Services, Access to Gym, Spa, Pool, Conceirge Services, etc..''')
+                print('''\n\nIf you have any special requests or requirements, feel free to contact us. Our staff is always available to assist you in any way possible to make your stay an enjoyable one.''')
+                print('''\n\nWe look forward to welcoming you to The Crystal Castle Hotel and hope you have a pleasant stay with us.''')
+                print('\n\nBest Regards, \nThe Crystal Castle Hotel')
+
+                mycon = x.connect(host='localhost', user='root', passwd='12345',
+                                  database='hotel_management_system', charset='utf-8')
+                cur = mycon.cursor()
+                sql = "INSERT INTO admin(Name, Room_Type, Check_In_Date, Check_Out_Date, Reservation_Number, Phone_Number, Email, Price) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
+                val = (cust_name, room_type, check_in_date, check_out_date,
+                       random_reservation_number, cust_ph_no, cust_email, price)
+                cur.execute(sql, val)
+                mycon.commit()
+
+            else:
+                if confirmation not in 'yY':
+                    print('Dear Guest, ')
+                    print('''\n\nWe regret to inform you that we were unable to confirm your reservation for a Suite Room at The Crystal Castle Hotel. As per our records, we did not receive confirmation from you regarding your booking request.''')
+                    print('''\n\nIf you still require accomodations during the requested dates, we should be happy to assist you in finding alternative options. Please feel free to contact our reservations team for assistance in making new arrangements.''')
+                    print('''\n\nWe apologize for any inconvenience this may cause and hope that you will consider staying with us on a future visit to The Crystal Castle Hotel. If you have any questions/concerns, feel free to contact us or leave a mail at "thecrystalcastlehotel@gmail.com" ''')
+
+    def Cancel_Room_Booking():
+        import mysql.connector as x
+        mycon = x.connect(host='localhost', user='root', passwd='12345',
+                          database='hotel_management_system', charset='utf-8')
+        cur = mycon.cursor()
+        reservation_number = input(
+            "Enter Your Reservation Number To Cancel Your Hotel Room Booking: ")
+        ans = input(
+            'Enter \'y\' To Confirm The Cancelling Of Your Hotel Room: ')
+        if ans in 'yY':
+            sql = "DELETE FROM admin WHERE Reservation_Number = %s"
+            val = (reservation_number,)
+
+            cur.execute(sql, val)
+            mycon.commit()
+            print('\nSubject: Confirmation Of Hotel Room Cancellation.')
+            print('\nDear Guest,')
+            print('\n\nWe have received your request to cancel your hotel room reservation at "The Crystal Castle Hotel". We apologize for any inconvenience this may have caused, and we appreciate your understanding and cooperation in this matter.')
+            print('\n\nPlease be informed that your reservation has been cancelled and you will not be charged any cancellation fees. If you have already paid for your reservation, your payment will be refunded to your account as soon as possible.')
+            print('\n\nOur staff is available to assist you with finding alternative accomodations or any other concerns you may have. Please feel free to contact us if you require any further assistance.')
+            print('\n\nWe hope to have the pleasure of welcoming you to our hotel in the future, and we thank you for considering us for your travel needs.')
+            print('\n\nSincerely, ')
+            print('The Crystal Castle Hotel')
+
+        elif ans not in 'yY':
+            print('Dear Guest, ')
+            print('''\n\nWe regret to inform you that we were unable to confirm your cancellation for a Double Room at The Crystal Castle Hotel. As per our records, we did not receive confirmation from you regarding your booking request.''')
+            print('''\n\nIf you still require accomodations during the requested dates, we should be happy to assist you in finding alternative options. Please feel free to contact our reservations team for assistance in making new arrangements.''')
+            print('''\n\nWe apologize for any inconvenience this may cause and hope that you will consider staying with us on a future visit to The Crystal Castle Hotel. If you have any questions/concerns, feel free to contact us or leave a mail at "thecrystalcastlehotel@gmail.com" ''')
+
+    while True:
+        Guest_Login_Window()
+        ch = int(input('Enter A Choice[1-5]: '))
+        if ch == 1:
+            Guest_Login()
+            print('\n')
+            print('_'*168)
+
+        if ch == 2:
+            print('-'*71, 'ROOM DETAILS', '-'*84)
+            Search_rooms()
+
+        if ch == 3:
+            print('-'*71, 'BOOK A ROOM', '-'*70)
+            Book_Room()
+
+        if ch == 4:
+            print('-'*71, 'CANCEL BOOKING', '-'*82)
+            Cancel_Room_Booking()
+
+        if ch == 5:
+            print("_"*154)
+            print('\n\t\t\t\t\t\t\t\tWelcome To')
+            print('\n\t\t\t\t\t\t\tTHE CRYSTAL CASTLE HOTEL.')
+
+            print("_"*154)
+
+            print("Are You-\n")
+            print("a. A Guest")
+            print("b. A Staff")
+            ch = input('Enter Your Choice[A/B]: ')
+            # ___________________________________________________________________________________________________________________________________________
+
+            if ch in 'aA':
+                Guest_Login_System()
+
+            if ch in 'bB':
+                Admin_Login_System()
+
+# ___________________________________________________________________________________________________________________________________________
+# _________________________________________________________A D M I N--L O G I N--S Y S T E M_________________________________________________
+
+
+Admin_Password = 'I3X4E2K3K9'
+
+
+def Admin_Login_System():
+    admin_passwd = input('Enter The Admin Password To Log-In As Admin: ')
+
+    def View_Customer_Table():
+        mycon = x.connect(host='localhost', user='root', passwd='12345',
+                          database='hotel_management_system', charset='utf-8')
+        cur = mycon.cursor()
+        cur.execute('select * from customer')
+        data = cur.fetchall()
+        head = ['Sr No', 'Room Type', 'Room Amenities',
+                'Room Services', 'Additional Services', 'Price']
+        print(tabulate(data, headers=head, tablefmt='grid'))
+
+    def View_Admin_Table():
+        mycon = x.connect(host='localhost', user='root', passwd='12345',
+                          database='hotel_management_system', charset='utf-8')
+        cur = mycon.cursor()
+        cur.execute('select * from admin')
+        data = cur.fetchall()
+        head = ['Name', 'Room Type', 'Check In Date',
+                'Check Out Date', 'Reservation Number', 'Phone Number', 'EMail', 'Price']
+        print(tabulate(data, headers=head, tablefmt='grid'))
+
+    if admin_passwd == Admin_Password:
+        print('-'*75, 'MENU', '-'*88)
+        print('1. View Customer Table. ')
+        print('2. View Admin Table.')
+        print('\n')
+        print('-'*169)
+        while True:
+            ch = int(input('Enter Your Choice[1/2]: '))
+            if ch == 1:
+                print('-'*71, 'CUSTOMER TABLE', '-'*79)
+                View_Customer_Table()
+                print('\n')
+                print('-'*169)
+
+            if ch == 2:
+                print('-'*71, 'ADMIN TABLE', '-'*76)
+                View_Admin_Table()
+                print('\n')
+                print('-'*169)
+
+    if admin_passwd != Admin_Password:
+        print('\n( ͡ ° ͜ʖ ͡ °) ')
+        print('You\'re an Impostor!\n')
+
+    # ___________________________________________________________________________________________________________________________________________
+mycon = x.connect(host='localhost', user='root', passwd='12345',
+                  charset='utf8', database='hotel_management_system')
+
+print("_"*154)
+print('\n\t\t\t\t\t\t\t\tWelcome To')
+print('\n\t\t\t\t\t\t\tTHE CRYSTAL CASTLE HOTEL.')
+
+print("_"*154)
+
+print("Are You-\n")
+print("a. A Guest")
+print("b. A Staff")
+ch = input('Enter Your Choice[A/B]: ')
+# ___________________________________________________________________________________________________________________________________________
+
+if ch in 'aA':
+    Guest_Login_System()
+
+if ch in 'bB':
+    Admin_Login_System()
+# ___________________________________________________________________________________________________________________________________________
